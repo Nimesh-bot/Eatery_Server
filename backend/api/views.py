@@ -133,20 +133,21 @@ class RegisterAPI(generics.GenericAPIView):
         myuser = request.data
         serializer = self.get_serializer(data=myuser)
         serializer.is_valid(raise_exception=True)
+
         user = serializer.save()
         # user_data = serializer.data
         auth_token = AuthToken.objects.create(user)
         token = auth_token[0].digest
         print("Token-->",token)
         subject = "Your email needs to be verified"
-        message = f'Hi, click on the link to verify email http://127.0.0.1:8000/api/verify/{token}' 
+        message = f'Thank you for registering, please click on the link to verify email http://127.0.0.1:8000/api/verify/{token}' 
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [myuser['email']]
         send_mail(subject, message, email_from, recipient_list)
        
         return Response({
-        "user": UserSerializer(user, context=self.get_serializer_context()).data,
-        "token": auth_token[1]
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "token": auth_token[1]
         })
 
 
@@ -366,7 +367,6 @@ def profileCreate(request):
 
 @api_view(['POST'])
 def profileUpdate(request,pk):
-    # menu = get_object_or_404(Menu, id=pk)
     userDetails = User.objects.get(id = pk)
     serializer = UserProfileSerializer(instance=userDetails, data = request.data)
     print(serializer)
@@ -414,16 +414,11 @@ def postReview(request):
     print(res)
     if res.exists() & user.exists():
         review = Reviews.objects.create(restaurant=res[0],user=user[0],reviews =request.data['reviews'])
-        # serializer = MenuSerializer(data = menu, many=False)
-        # if serializer.is_valid():
-        #     serializer.save()
-        # print(serializer)
+     
         data={
-        "message":"Added Successfully",
-        # "data" :serializer.data
-        "data": ReviewSerializer(review, many=False).data
+            "message":"Added Successfully",
+            "data": ReviewSerializer(review, many=False).data
         }
-        print(data)
     else:
         data={
             "message":"Restaurant or user doesnot exist"

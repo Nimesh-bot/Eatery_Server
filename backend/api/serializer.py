@@ -68,7 +68,7 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-MIN_LENGTH = 5
+MIN_LENGTH = 8
 
 
 
