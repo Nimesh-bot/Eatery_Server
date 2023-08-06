@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
 from rest_framework.request import Request
+from api.models import LoginTracker
 
 
 # from rest_framework_recursive.fields import RecursiveField
@@ -159,9 +160,13 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = authenticate(**data)
-        print(user)
+        tracker_obj = LoginTracker.objects.get_or_create(username=data.get("username"))[0]
+        is_valid = tracker_obj.valid_login()
+        if not is_valid[0]:
+            raise serializers.ValidationError(f'Tried more than 5 times. Try again in {is_valid[1]}')
         if user and user.is_active:
             return user
+        tracker_obj.add_try()
         raise serializers.ValidationError('Incorrect Credentials Passed.')
 
 

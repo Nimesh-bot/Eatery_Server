@@ -1,6 +1,8 @@
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+from django.utils import timezone
 # Create your models here.
 
 class Restaurant(models.Model):
@@ -75,4 +77,25 @@ class Reviews(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     reviews = models.TextField(max_length=350, null=True)
+
+class LoginTracker(models.Model):
+    username = models.EmailField(null=True,blank=True)
+    tries = models.IntegerField(default=0)
+
+    modified_on = models.DateTimeField(auto_now=True)
+
+    def valid_login(self):
+        if self.tries <=5 or self.modified_on+timedelta(minutes=3)<timezone.now():
+            return True, True
+        time_left = self.modified_on+timedelta(minutes=3)-timezone.now()
+        minutes = time_left.seconds // 60
+        seconds = time_left.seconds % 60
+
+        formatted_time = f"{minutes:02d}:{seconds:02d}"
+        return False, formatted_time
+    
+    def add_try(self):
+        self.tries+=1
+        self.save()
+
 

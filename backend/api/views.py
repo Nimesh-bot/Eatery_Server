@@ -10,7 +10,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from .serializer import OrderSerializer, RestaurantSerializer, MenuSerializer, ContactSerializer, UserProfileSerializer, ReviewSerializer, UserDataSerializer
 from rest_framework.generics import ListAPIView
-from .models import Restaurant, Menu, UserProfile, Order, Reviews
+from .models import Restaurant, Menu, UserProfile, Order, Reviews, LoginTracker
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.response import Response
 from rest_framework import generics, permissions
@@ -177,6 +177,11 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
+
+        # reset login tires
+        login_tracker = LoginTracker.objects.get_or_create(username=user.username)[0]
+        login_tracker.tries = 0
+        login_tracker.save()
         # user_name = User.objects.filter(username = user.username)
         # print(user_name)
         return Response({

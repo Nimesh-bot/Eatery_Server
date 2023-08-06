@@ -26,3 +26,7 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(Order)
 admin.site.register(Reviews)
+
+@admin.register(LoginTracker)
+class LoginTrackerAdmin(admin.ModelAdmin):
+    list_display = ('id','username','tries', "modified_on")
