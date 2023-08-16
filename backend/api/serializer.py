@@ -10,7 +10,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth import authenticate
 from rest_framework.request import Request
 from api.models import LoginTracker
-
+from django.contrib.auth.password_validation import validate_password
 
 # from rest_framework_recursive.fields import RecursiveField
 
@@ -130,7 +130,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
     def validate(self, data):
+        try:
+            validate_password(data['password'])
+        except serializers.ValidationError as e:
+            raise serializers.ValidationError({'passworderror':e})
         # raise serializers.ValidationError(str(data))
+        
         if data['password'] != data['password2']:
             raise serializers.ValidationError({'passworderror':"Password doesnot match"})
         return data

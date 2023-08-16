@@ -31,6 +31,7 @@ urlpatterns = [
     path('postreview/',views.postReview, name="postreview"),
     path('reviewdelete/<str:pk>/', views.reviewDelete, name="reviewdelete"),
     path('order-list/', views.orderList, name="order-list"),
+    path('order-list/<int:pk>/', views.orderListOfUser, name="order-list-user"),
     path('order-detail/<str:pk>/', views.orderDetail, name="order-detail"),
     path('order/<str:pk>/', views.order, name="order"),
 

@@ -443,6 +443,15 @@ def orderList(request, restaurant_slug=None):
     serializer =  OrderSerializer(order, many= True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def orderListOfUser(request, pk):
+    profile = UserProfile.objects.filter(user=pk)
+    user = User.objects.get(id=pk)
+
+    order = Order.objects.filter(user=user).order_by('-created_at')
+    
+    serializer =  OrderSerializer(order, many= True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def orderDetail(request, pk):

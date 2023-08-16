@@ -178,11 +178,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #for email verification
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "mail.viewstoryapp.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "noreply@viewstoryapp.com"
-EMAIL_HOST_PASSWORD = "KXRUX2iYXNfHJy2"
+EMAIL_HOST = "smtp.elasticemail.com"
+EMAIL_USE_TLS = False
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = "ranaxmond@gmail.com"
+EMAIL_HOST_PASSWORD = "C4B52853B4EFFAA4E5AD1D4028CA2770E605"
 # EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
